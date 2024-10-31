@@ -73,6 +73,7 @@ const SolicitorDashboard = () => {
             <th style={styles.tableHeader}>Estado</th>
             <th style={styles.tableHeader}>Evaluar</th>
             <th style={styles.tableHeader}>Cancelar</th>
+            <th style={styles.tableHeader}>Comentarios</th>
           </tr>
         </thead>
         <tbody>
@@ -119,6 +120,11 @@ const SolicitorDashboard = () => {
                 ) : (
                   "No disponible"
                 )}
+              </td>
+              <td style={styles.tableCell}>
+                {service.status === "completado"
+                  ? service.description || "Sin comentarios"
+                  : "N/A"}
               </td>
             </tr>
           ))}

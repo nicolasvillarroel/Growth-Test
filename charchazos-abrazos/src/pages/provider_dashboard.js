@@ -4,6 +4,7 @@ import Button from "../components/button";
 
 const ProviderDashboard = () => {
   const [services, setServices] = useState([]);
+  const [descriptions, setDescriptions] = useState({});
 
   useEffect(() => {
     const savedServices = JSON.parse(localStorage.getItem("services")) || [];
@@ -12,10 +13,19 @@ const ProviderDashboard = () => {
 
   const updateServiceStatus = (id, status) => {
     const updatedServices = services.map((service) =>
-      service.id === id ? { ...service, status } : service
+      service.id === id
+        ? { ...service, status, description: descriptions[id] || "" }
+        : service
     );
     setServices(updatedServices);
     localStorage.setItem("services", JSON.stringify(updatedServices));
+  };
+
+  const handleDescriptionChange = (id, text) => {
+    setDescriptions((prev) => ({
+      ...prev,
+      [id]: text,
+    }));
   };
 
   const calculateAverageRating = () => {
@@ -78,6 +88,7 @@ const ProviderDashboard = () => {
             <th style={styles.tableHeader}>Sexo</th>
             <th style={styles.tableHeader}>Acciones</th>
             <th style={styles.tableHeader}>Evaluación Obtenida</th>
+            <th style={styles.tableHeader}>Descripción</th>
           </tr>
         </thead>
         <tbody>
@@ -111,15 +122,25 @@ const ProviderDashboard = () => {
                     </Button>
                   </>
                 ) : service.status === "en progreso" ? (
-                  <Button
-                    onClick={() =>
-                      updateServiceStatus(service.id, "completado")
-                    }
-                    color="secondary"
-                    width="100px"
-                  >
-                    Completar
-                  </Button>
+                  <>
+                    <textarea
+                      placeholder="Describe el suceso..."
+                      value={descriptions[service.id] || ""}
+                      onChange={(e) =>
+                        handleDescriptionChange(service.id, e.target.value)
+                      }
+                      style={styles.textarea}
+                    />
+                    <Button
+                      onClick={() =>
+                        updateServiceStatus(service.id, "completado")
+                      }
+                      color="secondary"
+                      width="100px"
+                    >
+                      Completar
+                    </Button>
+                  </>
                 ) : (
                   service.status.charAt(0).toUpperCase() +
                   service.status.slice(1)
@@ -129,6 +150,11 @@ const ProviderDashboard = () => {
                 {service.status === "completado" && service.evaluation
                   ? `${parseInt(service.evaluation, 10)}`
                   : "No evaluado"}
+              </td>
+              <td style={styles.tableCell}>
+                {service.status === "completado"
+                  ? service.description || "No disponible"
+                  : "N/A"}
               </td>
             </tr>
           ))}
@@ -169,6 +195,13 @@ const styles = {
   tableCell: {
     padding: "10px",
     textAlign: "left",
+  },
+  textarea: {
+    width: "100%",
+    padding: "8px",
+    marginBottom: "10px",
+    fontSize: "14px",
+    resize: "none",
   },
 };
 
