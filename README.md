@@ -37,3 +37,5 @@ El proyecto cuenta con los siguientes componentes clave:
 ---
 
 ¡Esperamos que disfrutes usando **Charchazos y Abrazos**!
+
+PD: no existe GitFlow dado que se hizo todo en una pasada rápida.
